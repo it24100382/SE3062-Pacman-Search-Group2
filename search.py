@@ -71,6 +71,7 @@ def tinyMazeSearch(problem):
     s = Directions.SOUTH
     w = Directions.WEST
     return  [s, s, w, s, w, w, s, w]
+# Implementation by Chathumini - Q1 (DFS) & Q2 (BFS)
 
 def depthFirstSearch(problem: SearchProblem):
     """
@@ -86,7 +87,7 @@ def depthFirstSearch(problem: SearchProblem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
+    
     fringe = util.Stack()
     fringe.push((problem.getStartState(), []))
     visited = set()
@@ -108,7 +109,7 @@ def depthFirstSearch(problem: SearchProblem):
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    
     fringe = util.Queue()
     fringe.push((problem.getStartState(), []))
     visited = set()
