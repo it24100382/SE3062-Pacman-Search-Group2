@@ -88,21 +88,23 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     
+    # Implementation: Question 1 - Depth First Search (LIFO graph search)
     fringe = util.Stack()
-    fringe.push((problem.getStartState(), []))
-    visited = set()
+    start_state = problem.getStartState()
+    fringe.push((start_state, []))
+    explored_nodes = set()
 
     while not fringe.isEmpty():
-        current_state, actions = fringe.pop()
+        current_state, path_actions = fringe.pop()
 
         if problem.isGoalState(current_state):
-            return actions
+            return path_actions
 
-        if current_state not in visited:
-            visited.add(current_state)
-            for successor, action, step_cost in problem.getSuccessors(current_state):
-                if successor not in visited:
-                    fringe.push((successor, actions + [action]))
+        if current_state not in explored_nodes:
+            explored_nodes.add(current_state)
+            for next_state, action, step_cost in problem.getSuccessors(current_state):
+                if next_state not in explored_nodes:
+                    fringe.push((next_state, path_actions + [action]))
 
     return []
 
@@ -110,21 +112,23 @@ def depthFirstSearch(problem: SearchProblem):
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     
+    # Implementation: Question 2 - Breadth First Search (FIFO graph search)
     fringe = util.Queue()
-    fringe.push((problem.getStartState(), []))
-    visited = set()
+    start_state = problem.getStartState()
+    fringe.push((start_state, []))
+    explored_nodes = set()
 
     while not fringe.isEmpty():
-        current_state, actions = fringe.pop()
+        current_state, path_actions = fringe.pop()
 
         if problem.isGoalState(current_state):
-            return actions
+            return path_actions
 
-        if current_state not in visited:
-            visited.add(current_state)
-            for successor, action, step_cost in problem.getSuccessors(current_state):
-                if successor not in visited:
-                    fringe.push((successor, actions + [action]))
+        if current_state not in explored_nodes:
+            explored_nodes.add(current_state)
+            for next_state, action, step_cost in problem.getSuccessors(current_state):
+                if next_state not in explored_nodes:
+                    fringe.push((next_state, path_actions + [action]))
 
     return []
 
