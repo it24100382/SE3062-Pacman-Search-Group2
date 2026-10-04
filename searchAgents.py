@@ -295,17 +295,14 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-   
-        # State: ((x, y), tuple_of_visited_corners)
-        visited_corners = (False, False, False, False)
-        start_pos = self.startingPosition
-        # Check if the start position is already on a corner
-        visited_list = list(visited_corners)
-        for i, corner in enumerate(self.corners):
-            if start_pos == corner:
-                visited_list[i] = True
-        return (start_pos, tuple(visited_list))
+        start_position = self.startingPosition
+
+        visited_corners = tuple(
+            start_position == corner
+            for corner in self.corners
+        )
+
+        return (start_position, visited_corners)
 
     "*** YOUR CODE HERE ***"
     def isGoalState(self, state):
