@@ -492,22 +492,31 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    
+
+    "*** YOUR CODE HERE ***"
     food_list = foodGrid.asList()
+
+    # Goal state: no food left -> heuristic must be 0
     if not food_list:
         return 0
 
-    return max(mazeDistance(position, food, problem.startingGameState) for food in food_list)
+    # Cache of maze distances, stored once per problem instance.
+    # Key = (point1, point2); maze distance is symmetric, so we store both orders.
+    if 'distCache' not in problem.heuristicInfo:
+        problem.heuristicInfo['distCache'] = {}
+    cache = problem.heuristicInfo['distCache']
 
-    # Maximum pairwise maze distance between any two remaining food pellets
-    max_food_dist = 0
-    for i in range(len(food_list)):
-        for j in range(i + 1, len(food_list)):
-            dist = mazeDistance(food_list[i], food_list[j], problem.startingGameState)
-            if dist > max_food_dist:
-                max_food_dist = dist
+    def cachedMazeDistance(p1, p2):
+        key = (p1, p2)
+        if key not in cache:
+            d = mazeDistance(p1, p2, problem.startingGameState)
+            cache[key] = d
+            cache[(p2, p1)] = d
+        return cache[key]
 
-    return max(min_dist_to_food, max_food_dist)
+    # Admissible + consistent: real maze distance to the FARTHEST remaining food.
+    # Pacman must eventually reach every dot, so the true cost is at least this.
+    return max(cachedMazeDistance(position, food) for food in food_list)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
