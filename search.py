@@ -131,8 +131,9 @@ def uniformCostSearch(problem: SearchProblem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
     fringe = util.PriorityQueue()
-    fringe.push((problem.getStartState(), [], 0), 0)
-    visited = {}
+    start_state = problem.getStartState()
+    fringe.push((start_state, [], 0), 0)
+    visited = set()
 
     while not fringe.isEmpty():
         current_state, actions, current_cost = fringe.pop()
@@ -140,12 +141,12 @@ def uniformCostSearch(problem: SearchProblem):
         if problem.isGoalState(current_state):
             return actions
 
-        if (current_state not in visited) or (current_cost < visited[current_state]):
-            visited[current_state] = current_cost
+        if current_state not in visited:
+            visited.add(current_state)
             for successor, action, step_cost in problem.getSuccessors(current_state):
-                new_cost = current_cost + step_cost
-                if (successor not in visited) or (new_cost < visited.get(successor, float('inf'))):
-                    fringe.push((successor, actions + [action], new_cost), new_cost)
+                if successor not in visited:
+                    next_cost = current_cost + step_cost
+                    fringe.push((successor, actions + [action], next_cost), next_cost)
 
     return []
 
@@ -161,9 +162,9 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     "*** YOUR CODE HERE ***"
     fringe = util.PriorityQueue()
     start_state = problem.getStartState()
-    start_h = heuristic(start_state, problem)
-    fringe.push((start_state, [], 0), 0 + start_h)
-    visited = {}
+    initial_h = heuristic(start_state, problem)
+    fringe.push((start_state, [], 0), 0 + initial_h)
+    visited = set()
 
     while not fringe.isEmpty():
         current_state, actions, current_cost = fringe.pop()
@@ -171,13 +172,13 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
         if problem.isGoalState(current_state):
             return actions
 
-        if (current_state not in visited) or (current_cost < visited[current_state]):
-            visited[current_state] = current_cost
+        if current_state not in visited:
+            visited.add(current_state)
             for successor, action, step_cost in problem.getSuccessors(current_state):
-                new_cost = current_cost + step_cost
-                if (successor not in visited) or (new_cost < visited.get(successor, float('inf'))):
-                    h_val = heuristic(successor, problem)
-                    fringe.push((successor, actions + [action], new_cost), new_cost + h_val)
+                if successor not in visited:
+                    next_cost = current_cost + step_cost
+                    priority = next_cost + heuristic(successor, problem)
+                    fringe.push((successor, actions + [action], next_cost), priority)
 
     return []
 
